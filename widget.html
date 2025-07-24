@@ -5,7 +5,21 @@
   <title>Chat Assistant</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://js.zohostatic.com/creator/widgets/version/2.0/widgetsdk-min.js"></script>
-  <style>
+<!-- Bootstrap 5 CSS (optional, Creator may already load it) -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.7/handlebars.js"></script>
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+		<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css " />
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="../js/ZohoEmbededAppSDK.min15.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<style>
     body {
       background-color: #f0f2f5;
     }
@@ -65,74 +79,94 @@
       background-color: #f9f9f9;
     }
   </style>
-</head>
+  </head>
 <body>
-<div class="chat-container">
-  <div class="chat-header">Chat Assistant</div>
+<div class="container py-3" style="max-width: 600px;">
+  <div class="card shadow rounded-4 d-flex flex-column" style="height: 520px; background-color: #f8f9fa;">
 
-  <div class="chat-messages" id="chatMessages">
-    <div class="chat-message assistant">
-      <div class="bubble">Hello! I’m ChatGPT. How can I help you today?</div>
+    <!-- Header -->
+    <div class="card-header text-white rounded-top-4" style="background-color: #343a40;">
+      <h5 class="mb-0">💬 Zoho Messenger</h5>
     </div>
-  </div>
 
-  <div class="chat-footer">
-    <form id="chatForm">
-      <div class="input-group">
-        <input type="text" id="messageInput" class="form-control" placeholder="Send a message..." required>
-        <button class="btn btn-success" type="submit">Send</button>
+    <!-- Chat Area -->
+    <div id="chatBox" class="card-body overflow-auto" style="flex-grow: 1;">
+      <!-- Initial messages -->
+      <div class="d-flex mb-2">
+        <div class="bg-light px-3 py-2 rounded-pill shadow-sm">Welcome to Zoho Support!</div>
       </div>
-    </form>
+      <div class="d-flex justify-content-end mb-2">
+        <div class="bg-success text-white px-3 py-2 rounded-pill shadow-sm">Hi, I need help with CRM.</div>
+      </div>
+    </div>
+
+    <!-- Footer Input -->
+    <div class="card-footer bg-white border-top rounded-bottom-4">
+      <div class="input-group">
+        <input type="text" id="chatInput" class="form-control" placeholder="Type a message..." />
+        <button id="sendBtn" class="btn btn-success">Send</button>
+      </div>
+    </div>
+
   </div>
 </div>
 
+<!-- Inline script that works in Zoho Creator -->
 <script>
-  let appName = "client-portal-view"; // replace with your app link name
+document.addEventListener("DOMContentLoaded", function () {
+  var sendBtn = document.getElementById("sendBtn");
+  var chatBox = document.getElementById("chatBox");
+  var input = document.getElementById("chatInput");
 
-  ZOHO.embeddedApp.init().then(() => {
-    // Now safe to use .on()
-    ZOHO.embeddedApp.on("PageLoad", function () {
-      const chatForm = document.getElementById('chatForm');
-      const messageInput = document.getElementById('messageInput');
-      const chatMessages = document.getElementById('chatMessages');
-
-      chatForm.addEventListener('submit', function (e) {
-        e.preventDefault();
-
-        const message = messageInput.value.trim();
-        if (!message) return;
-
-        appendMessage('user', message);
-        messageInput.value = '';
-        callAI(message);
-      });
-
-      function appendMessage(sender, text) {
-        const msgDiv = document.createElement('div');
-        msgDiv.className = `chat-message ${sender}`;
-        msgDiv.innerHTML = `<div class="bubble">${text}</div>`;
-        chatMessages.appendChild(msgDiv);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
+  sendBtn.addEventListener("click", function () {
+    debugger;
+    var settings = {
+  "url": "https://api.openai.com/v1/chat/completions",
+  "method": "POST",
+  "timeout": 0,
+  "headers": {
+    "Content-Type": "application/json",
+    "Authorization": "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"
+  },
+  "data": JSON.stringify({
+    "model": "gpt-4",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Write a haiku about AI"
       }
+    ]
+  }),
+};
 
-      function callAI(message) {
-        ZOHO.CREATOR.API.invokeCustomFunction({
-          appName: appName,
-          formName: "New_Appointment", // Replace as needed
-          functionName: "testingGptFunction2",
-          data: { prompt: message }
-        }).then(function(response) {
-          const parsed = JSON.parse(response.data);
-          const reply = parsed.choices[0].message.content;
-          appendMessage('assistant', reply);
-        }).catch(function(err) {
-          console.error("Function call failed:", err);
-          appendMessage('assistant', "Sorry, something went wrong.");
-        });
-      }
-    });
+$.ajax(settings).done(function (response) {
+  debugger;
+  console.log(response);
+});
+    var message = input.value.trim();
+    if (message === "") return;
+
+    // Create wrapper div
+    var msgWrapper = document.createElement("div");
+    msgWrapper.className = "d-flex justify-content-end mb-2";
+
+    // Create message bubble
+    var msgBubble = document.createElement("div");
+    msgBubble.className = "bg-success text-white px-3 py-2 rounded-pill shadow-sm";
+    msgBubble.textContent = message;
+
+    // Append bubble to wrapper, then to chat
+    msgWrapper.appendChild(msgBubble);
+    chatBox.appendChild(msgWrapper);
+
+    // Clear input
+    input.value = "";
+
+    // Scroll to bottom
+    chatBox.scrollTop = chatBox.scrollHeight;
+    debugger;
   });
+});
 </script>
-
 </body>
 </html>
